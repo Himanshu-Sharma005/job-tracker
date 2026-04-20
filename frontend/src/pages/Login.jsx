@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { LogIn } from 'lucide-react';
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -35,19 +36,26 @@ function Login({ onLogin }) {
 
   return (
     <div className="auth-container">
-      <div className="auth-card glass-panel">
+      <div className="card auth-card">
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--s-4)' }}>
+          <div style={{ background: 'var(--accent-soft)', color: 'var(--accent)', padding: 'var(--s-3)', borderRadius: '12px' }}>
+            <LogIn size={32} />
+          </div>
+        </div>
         <h2>Welcome Back</h2>
-        <p className="auth-subtitle">Login to your abstract dashboard</p>
+        <p className="auth-subtitle">Login to manage your job applications</p>
+        
         {error && <div className="error-message">{error}</div>}
+        
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Email</label>
+            <label>Email Address</label>
             <input 
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               required 
-              placeholder="Enter your email"
+              placeholder="name@company.com"
             />
           </div>
           <div className="form-group">
@@ -57,15 +65,16 @@ function Login({ onLogin }) {
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
               required 
-              placeholder="Enter your password"
+              placeholder="••••••••"
             />
           </div>
-          <button className="primary-btn full-width" type="submit" disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Login'}
+          <button className="primary-btn" type="submit" disabled={isLoading} style={{ width: '100%', marginTop: 'var(--s-4)' }}>
+            {isLoading ? 'Logging in...' : 'Sign In'}
           </button>
         </form>
+        
         <p className="auth-footer">
-          Don't have an account? <Link to="/signup">Sign up</Link>
+          Don't have an account? <Link to="/signup" style={{ fontWeight: '600' }}>Sign up for free</Link>
         </p>
       </div>
     </div>

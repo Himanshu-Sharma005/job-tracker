@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Plus, Search, Filter, ArrowUpDown } from 'lucide-react';
 import JobItem from '../components/JobItem';
 import JobForm from '../components/JobForm';
 import StatsPanel from '../components/StatsPanel';
@@ -17,7 +18,6 @@ function Dashboard() {
   
   const { addToast } = useToast();
   
-  // Pagination State
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -26,7 +26,6 @@ function Dashboard() {
   const [editingJob, setEditingJob] = useState(null);
   const [jobToDelete, setJobToDelete] = useState(null);
 
-  // Use a refresh key to force StatsPanel to refresh when jobs change
   const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchJobs = async () => {
@@ -34,7 +33,7 @@ function Dashboard() {
     try {
       const token = localStorage.getItem('token');
       
-      let url = `/api/jobs?page=${page}&limit=9`; // 9 implies 3x3 grid
+      let url = `/api/jobs?page=${page}&limit=9`;
       if (search) url += `&search=${search}`;
       if (statusFilter) url += `&status=${statusFilter}`;
       if (sortBy) url += `&sortBy=${sortBy}`;
@@ -78,7 +77,6 @@ function Dashboard() {
     fetchReminders();
   }, [search, statusFilter, sortBy, page]);
 
-  // Reset page when filters change
   useEffect(() => {
     setPage(1);
   }, [search, statusFilter, sortBy]);
@@ -98,10 +96,9 @@ function Dashboard() {
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error(data.message || 'Failed to add job');
       
-      
       addToast('Job application created successfully!', 'success');
       await fetchJobs();
-      setRefreshKey(old => old + 1); // trigger stats refresh
+      setRefreshKey(old => old + 1);
       setIsFormOpen(false);
     } catch (err) {
       addToast(err.message, 'error');
@@ -122,7 +119,6 @@ function Dashboard() {
       
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error(data.message || 'Failed to update job');
-      
       
       addToast('Job application updated successfully!', 'success');
       await fetchJobs();
@@ -177,20 +173,26 @@ function Dashboard() {
   };
 
   return (
-    <div className="dashboard" style={{ padding: '2rem 5%' }}>
+    <div className="dashboard">
       <div className="dashboard-header">
-        <h2>Your Job Applications</h2>
-        <button className="primary-btn" onClick={openAddForm}>+ New Application</button>
+        <div>
+          <h2>Your Job Applications</h2>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Track and manage your professional journey</p>
+        </div>
+        <button className="primary-btn" onClick={openAddForm}>
+          <Plus size={18} />
+          <span>New Application</span>
+        </button>
       </div>
 
       <StatsPanel key={refreshKey} />
 
       {reminders.length > 0 && (
-        <div className="reminders-section glass-panel" style={{ marginBottom: '2rem', borderLeft: '4px solid var(--warning-color)' }}>
-          <h3 style={{ color: 'var(--warning-color)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="card" style={{ marginBottom: 'var(--s-8)', borderLeft: '4px solid var(--warning)' }}>
+          <h3 style={{ color: 'var(--warning)', marginBottom: 'var(--s-4)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             🔔 Reminders Today
           </h3>
-          <div className="jobs-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))' }}>
+          <div className="jobs-grid" style={{ marginBottom: 0 }}>
             {reminders.map(job => (
               <JobItem 
                 key={job.id} 
@@ -203,44 +205,58 @@ function Dashboard() {
         </div>
       )}
 
-      <div className="dashboard-controls" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
-        <input 
-          type="text" 
-          placeholder="Search by company..." 
-          className="search-input"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ flex: '1', minWidth: '200px' }}
-        />
-        <select 
-          className="status-filter"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="">All Statuses</option>
-          <option value="Applied">Applied</option>
-          <option value="Interview">Interview</option>
-          <option value="Offer">Offer</option>
-          <option value="Rejected">Rejected</option>
-        </select>
-        <select 
-          className="status-filter"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-        >
-          <option value="date">Sort: Newest First</option>
-          <option value="priority">Sort: By Priority</option>
-        </select>
+      <div className="dashboard-controls">
+        <div className="control-group search-wrapper" style={{ position: 'relative', flex: '1', minWidth: '280px' }}>
+          <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+          <input 
+            type="text" 
+            placeholder="Search by company..." 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ paddingLeft: '40px' }}
+          />
+        </div>
+        
+        <div className="control-group">
+          <Filter size={18} style={{ color: 'var(--text-secondary)' }} />
+          <select 
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            style={{ minWidth: '160px' }}
+          >
+            <option value="">All Statuses</option>
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+
+        <div className="control-group">
+          <ArrowUpDown size={18} style={{ color: 'var(--text-secondary)' }} />
+          <select 
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            style={{ minWidth: '180px' }}
+          >
+            <option value="date">Newest First</option>
+            <option value="priority">By Priority</option>
+          </select>
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
       
       {isLoading ? (
-        <div className="empty-state">Loading your applications...</div>
-      ) : jobs.length === 0 ? (
         <div className="empty-state">
+          <div className="loading-spinner" style={{ marginBottom: '1rem' }}>Loading...</div>
+          <p>Fetching your job applications...</p>
+        </div>
+      ) : jobs.length === 0 ? (
+        <div className="card empty-state">
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📂</div>
           <h3>No applications found</h3>
-          <p>Click the button above to start tracking your job search.</p>
+          <p>You haven't added any job applications yet. Click the "New Application" button to start tracking your search.</p>
         </div>
       ) : (
         <>
@@ -256,7 +272,7 @@ function Dashboard() {
           </div>
 
           {totalPages > 1 && (
-            <div className="pagination-controls">
+            <div className="pagination-controls" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 'var(--s-4)', marginTop: 'var(--s-8)' }}>
               <button 
                 className="secondary-btn" 
                 onClick={() => setPage(page - 1)} 
@@ -264,7 +280,7 @@ function Dashboard() {
               >
                 Previous
               </button>
-              <span>Page {page} of {totalPages} (Total: {totalCount})</span>
+              <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>Page {page} of {totalPages}</span>
               <button 
                 className="secondary-btn" 
                 onClick={() => setPage(page + 1)} 

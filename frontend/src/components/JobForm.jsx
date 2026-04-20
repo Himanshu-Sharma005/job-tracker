@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { X, Save, Calendar } from 'lucide-react';
 
 function JobForm({ job, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
@@ -35,9 +36,15 @@ function JobForm({ job, onSubmit, onCancel }) {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content glass-panel">
-        <h2>{job ? 'Edit Job Application' : 'Add New Application'}</h2>
+    <div className="modal-overlay" onClick={onCancel}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--s-6)' }}>
+          <h2 style={{ fontSize: '1.5rem' }}>{job ? 'Edit Application' : 'New Application'}</h2>
+          <button className="icon-btn" onClick={onCancel} style={{ padding: '0.5rem' }}>
+            <X size={20} />
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Company Name</label>
@@ -61,8 +68,9 @@ function JobForm({ job, onSubmit, onCancel }) {
               placeholder="e.g. Frontend Developer"
             />
           </div>
-          <div className="form-group" style={{ display: 'flex', gap: '1rem' }}>
-            <div style={{ flex: 1 }}>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--s-4)', marginBottom: 'var(--s-4)' }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
               <label>Status</label>
               <select name="status" value={formData.status} onChange={handleChange}>
                 <option value="Applied">Applied</option>
@@ -71,7 +79,7 @@ function JobForm({ job, onSubmit, onCancel }) {
                 <option value="Offer">Offer</option>
               </select>
             </div>
-            <div style={{ flex: 1 }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
               <label>Priority</label>
               <select name="priority" value={formData.priority} onChange={handleChange}>
                 <option value="Low">Low</option>
@@ -80,18 +88,21 @@ function JobForm({ job, onSubmit, onCancel }) {
               </select>
             </div>
           </div>
-          <div className="form-group" style={{ display: 'flex', gap: '1rem' }}>
-            <div style={{ flex: 1 }}>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--s-4)', marginBottom: 'var(--s-4)' }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
               <label>Application Date</label>
-              <input 
-                type="date" 
-                name="application_date" 
-                value={formData.application_date} 
-                onChange={handleChange} 
-                required 
-              />
+              <div style={{ position: 'relative' }}>
+                <input 
+                  type="date" 
+                  name="application_date" 
+                  value={formData.application_date} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
             </div>
-            <div style={{ flex: 1 }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
               <label>Follow-up Reminder</label>
               <input 
                 type="date" 
@@ -101,19 +112,26 @@ function JobForm({ job, onSubmit, onCancel }) {
               />
             </div>
           </div>
+
           <div className="form-group">
             <label>Notes</label>
             <textarea 
               name="notes" 
               value={formData.notes} 
               onChange={handleChange} 
-              rows="3" 
-              placeholder="Any specific details, links, or contacts..."
+              rows="4" 
+              placeholder="Any specific details, links, or interview notes..."
             ></textarea>
           </div>
-          <div className="modal-actions">
-            <button type="button" className="secondary-btn" onClick={onCancel}>Cancel</button>
-            <button type="submit" className="primary-btn">{job ? 'Update Job' : 'Add Job'}</button>
+          
+          <div style={{ display: 'flex', gap: 'var(--s-3)', marginTop: 'var(--s-8)' }}>
+            <button type="button" className="secondary-btn" onClick={onCancel} style={{ flex: 1 }}>
+              Cancel
+            </button>
+            <button type="submit" className="primary-btn" style={{ flex: 1 }}>
+              <Save size={18} />
+              <span>{job ? 'Update' : 'Create'} Application</span>
+            </button>
           </div>
         </form>
       </div>

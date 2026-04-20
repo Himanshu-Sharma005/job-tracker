@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, LogOut, Home, Info, Mail, User } from 'lucide-react';
 
 function Navbar({ isAuthenticated, onLogout }) {
   const [user, setUser] = useState(null);
@@ -33,33 +34,53 @@ function Navbar({ isAuthenticated, onLogout }) {
   }, [isAuthenticated]);
 
   return (
-    <header className="main-header" style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
+    <header className="main-header">
       <h1 onClick={() => navigate('/')} style={{ cursor: 'pointer', margin: 0 }}>
         Job Tracker
       </h1>
       
-      <nav className="nav-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+      <nav className="nav-wrapper">
         {/* Public Links */}
-        <Link to="/" style={{ color: 'var(--text-primary)', fontWeight: '500' }}>Home</Link>
-        <a href="#about" style={{ color: 'var(--text-primary)', fontWeight: '500' }}>About</a>
-        <a href="#contact" style={{ color: 'var(--text-primary)', fontWeight: '500' }}>Contact</a>
+        <Link to="/" className="nav-link">
+          <Home size={18} />
+          <span>Home</span>
+        </Link>
+        <a href="#about" className="nav-link">
+          <Info size={18} />
+          <span>About</span>
+        </a>
+        <a href="#contact" className="nav-link">
+          <Mail size={18} />
+          <span>Contact</span>
+        </a>
 
         {/* Authentication Controls */}
         {!isAuthenticated ? (
-          <div className="user-controls" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link to="/login" style={{ color: 'var(--text-primary)', fontWeight: '500' }}>Login</Link>
-            <Link to="/signup" className="primary-btn" style={{ padding: '0.5rem 1rem' }}>Sign Up</Link>
+          <div className="user-controls">
+            <Link to="/login" className="nav-link">Login</Link>
+            <Link to="/signup" className="primary-btn">Sign Up</Link>
           </div>
         ) : (
-          <div className="user-controls" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link to="/dashboard" style={{ color: 'var(--accent-color)', fontWeight: '600' }}>Dashboard</Link>
+          <div className="user-controls" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+            <Link to="/dashboard" className="nav-link" style={{ color: 'var(--accent)' }}>
+              <LayoutDashboard size={18} />
+              <span>Dashboard</span>
+            </Link>
             {user && (
-              <div className="user-info" style={{ textAlign: 'right' }}>
-                <div style={{ fontWeight: '600', fontSize: '0.9rem' }}>{user.name}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{user.email}</div>
+              <div className="user-info">
+                <div className="user-info-text">
+                  <div className="user-name">{user.name}</div>
+                  <div className="user-email">{user.email}</div>
+                </div>
+                <div className="user-avatar">
+                  <User size={20} />
+                </div>
               </div>
             )}
-            <button className="logout-btn" onClick={onLogout}>Logout</button>
+            <button className="icon-btn logout-btn" onClick={onLogout}>
+              <LogOut size={18} />
+              <span>Logout</span>
+            </button>
           </div>
         )}
       </nav>

@@ -31,49 +31,74 @@ function StatsPanel() {
     fetchStats();
   }, []);
 
-  if (isLoading || !stats) return <div className="stats-panel glass-panel">Loading analytics...</div>;
+  if (isLoading || !stats) return (
+    <div className="card" style={{ padding: 'var(--s-8)', textAlign: 'center', color: 'var(--text-secondary)' }}>
+      Loading analytics...
+    </div>
+  );
 
   const chartData = {
     labels: ['Applied', 'Interview', 'Offer', 'Rejected'],
     datasets: [
       {
-        label: '# of Applications',
         data: [stats.Applied, stats.Interview, stats.Offer, stats.Rejected],
         backgroundColor: [
-          'rgba(99, 102, 241, 0.6)', // Accent
-          'rgba(245, 158, 11, 0.6)', // Warning
-          'rgba(16, 185, 129, 0.6)', // Success
-          'rgba(239, 68, 68, 0.6)'   // Danger
+          '#9ca3af', // Gray
+          '#3b82f6', // Blue
+          '#10b981', // Green
+          '#ef4444'  // Red
         ],
-        borderColor: [
-          'rgba(99, 102, 241, 1)',
-          'rgba(245, 158, 11, 1)',
-          'rgba(16, 185, 129, 1)',
-          'rgba(239, 68, 68, 1)'
-        ],
-        borderWidth: 1,
+        borderWidth: 0,
+        hoverOffset: 4,
       },
     ],
   };
 
+  const chartOptions = {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: {
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: 20,
+          font: {
+            family: "'Inter', sans-serif",
+            size: 13
+          },
+          color: '#1f2937'
+        }
+      },
+      tooltip: {
+        backgroundColor: '#1f2937',
+        padding: 12,
+        cornerRadius: 8,
+        titleFont: { size: 14, weight: 'bold' },
+        bodyFont: { size: 13 }
+      }
+    },
+    cutout: '70%'
+  };
+
   return (
-    <div className="stats-panel glass-panel">
-      <div className="stats-cards">
-        <div className="stat-card">
-          <h4>Total Applications</h4>
-          <p className="stat-value">{stats.total}</p>
+    <div className="card stats-panel">
+      <div className="stats-summary">
+        <div style={{ padding: 'var(--s-4)', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: 'var(--s-1)' }}>Total</p>
+          <p style={{ fontSize: '2rem', fontWeight: '800' }}>{stats.total}</p>
         </div>
-        <div className="stat-card">
-          <h4>Interviews</h4>
-          <p className="stat-value">{stats.Interview}</p>
+        <div style={{ padding: 'var(--s-4)', textAlign: 'center', borderLeft: '1px solid var(--border-color)', borderRight: '1px solid var(--border-color)' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--accent)', textTransform: 'uppercase', marginBottom: 'var(--s-1)' }}>Interviews</p>
+          <p style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--accent)' }}>{stats.Interview}</p>
         </div>
-        <div className="stat-card">
-          <h4>Offers</h4>
-          <p className="stat-value">{stats.Offer}</p>
+        <div style={{ padding: 'var(--s-4)', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: '600', color: 'var(--success)', textTransform: 'uppercase', marginBottom: 'var(--s-1)' }}>Offers</p>
+          <p style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--success)' }}>{stats.Offer}</p>
         </div>
       </div>
-      <div className="chart-container">
-        <Doughnut data={chartData} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#f8fafc' } } } }} />
+      <div style={{ height: '160px', width: '100%', position: 'relative' }}>
+        <Doughnut data={chartData} options={chartOptions} />
       </div>
     </div>
   );

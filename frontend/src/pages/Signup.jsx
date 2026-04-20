@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { UserPlus } from 'lucide-react';
 
 function Signup({ onSignup }) {
   const [name, setName] = useState('');
@@ -36,10 +37,17 @@ function Signup({ onSignup }) {
 
   return (
     <div className="auth-container">
-      <div className="auth-card glass-panel">
+      <div className="card auth-card">
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 'var(--s-4)' }}>
+          <div style={{ background: 'var(--accent-soft)', color: 'var(--accent)', padding: 'var(--s-3)', borderRadius: '12px' }}>
+            <UserPlus size={32} />
+          </div>
+        </div>
         <h2>Create Account</h2>
         <p className="auth-subtitle">Start tracking your job applications today</p>
+        
         {error && <div className="error-message">{error}</div>}
+        
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Full Name</label>
@@ -48,17 +56,17 @@ function Signup({ onSignup }) {
               value={name} 
               onChange={(e) => setName(e.target.value)} 
               required 
-              placeholder="Enter your full name"
+              placeholder="e.g. John Doe"
             />
           </div>
           <div className="form-group">
-            <label>Email</label>
+            <label>Email Address</label>
             <input 
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               required 
-              placeholder="Enter your email"
+              placeholder="name@example.com"
             />
           </div>
           <div className="form-group">
@@ -68,15 +76,16 @@ function Signup({ onSignup }) {
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
               required 
-              placeholder="Create a password"
+              placeholder="••••••••"
             />
           </div>
-          <button className="primary-btn full-width" type="submit" disabled={isLoading}>
-            {isLoading ? 'Creating...' : 'Sign Up'}
+          <button className="primary-btn" type="submit" disabled={isLoading} style={{ width: '100%', marginTop: 'var(--s-4)' }}>
+            {isLoading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
+        
         <p className="auth-footer">
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account? <Link to="/login" style={{ fontWeight: '600' }}>Login instead</Link>
         </p>
       </div>
     </div>
