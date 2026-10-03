@@ -41,7 +41,7 @@ DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=your_password
 DB_NAME=job_tracker
-JWT_SECRET=mysecret123
+JWT_SECRET=secret
 ```
 
 Start the API Server:
